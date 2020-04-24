@@ -9,7 +9,6 @@ const axios = require("axios")
 const fs = require("fs")
 
 const createTag = function (tagName, str) {
-  // return `<${tagName}>${str}</${tagName}>`
   return "<" +  tagName + ">" + str  + "</" + tagName + ">"
 }
 const questions = [
@@ -60,33 +59,23 @@ inquirer.prompt(questions).then( (response) => {
         <html>
         <head>
            <title>${response.name}'s Web Page</title>
+           <link rel="stylesheet" href="styles.css">
         </head>
         <body>
       `;
 
-      // Create h1 tag for page title
       html += createTag("h1", "Web Page For " + response.name)
 
-      // for each repo, create a div, and a ul/li combo for some info
       repoArray.forEach( repo => {
-        // Create each li tag for the current repo
-        const liTag1 = createTag("li", "Id: " + repo.id) // <li>Id: 53434343</li>
-        const liTag2 = createTag("li", "Name: " + repo.name) // <li>Name: group_project_1</li>
-
-        // Join the two li tags together into a single string
+        const liTag1 = createTag("li", "Id: " + repo.id) 
+        const liTag2 = createTag("li", "Name: " + repo.name) 
         const allLiTags = liTag1 + liTag2
+        const ulTag = createTag("ul", allLiTags) 
+        const divTag = createTag("div", ulTag)
 
-        // Put the string of li tags inside a <ul> tag
-        const ulTag = createTag("ul", allLiTags) // <ul><li>....</li><li>....</li></ul>
-
-        // Put the ul tag inside of a div
-        const divTag = createTag("div", ulTag) // <div><ul><li>....</li><li>....</li></ul></div>
-
-        // Add the div tag for this repo to the html
         html += divTag
       })
 
-      // Now add the closing html tags
       html += `
         </body>
         </html>
@@ -100,7 +89,11 @@ inquirer.prompt(questions).then( (response) => {
         console.log("Success!")
       })
 
-      let css ="h1 { color: red; } "
+      let css ="h1 {\n  color: red;\n}\n \n"
+      css+= "body {\n  background-color: rgb(#927a8e);\n}\n \n"
+      // css+= ".liTag1 {\n  color: white;\n}\n"
+      // css+= ".liTag2 {\n  color: white;\n}\n"
+
 
       fs.writeFile("styles.css", css, err => {
         if(err){
